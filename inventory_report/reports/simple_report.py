@@ -4,14 +4,20 @@ from collections import Counter
 
 class SimpleReport():
     def oldest_manufacture(list):
-        for item in list:
-            oldest = date.fromisoformat(item["data_de_fabricacao"])
-            return oldest
+        oldest = {
+            date.fromisoformat(product["data_de_fabricacao"])
+            for product in list
+        }
+        return min(oldest).isoformat()
 
     def validate_closer(list):
-        for item in list:
-            closer = date.fromisoformat(item["data_de_validade"])
-            return closer
+        closer = {
+                date.fromisoformat(product["data_de_validade"])
+                for product in list
+                if date.fromisoformat(product["data_de_validade"])
+                >= date.today()
+            }
+        return min(closer).isoformat()
 
     def company_with_more_products(list):
         [(company, _)] = Counter(
@@ -25,7 +31,7 @@ class SimpleReport():
         company = SimpleReport.company_with_more_products(list)
 
         return (
-            f"Data de fabricação mais antiga: {oldest}"
-            f"Data de validade mais próxima: {closer}"
+            f"Data de fabricação mais antiga: {oldest}\n"
+            f"Data de validade mais próxima: {closer}\n"
             f"Empresa com mais produtos: {company}"
         )
