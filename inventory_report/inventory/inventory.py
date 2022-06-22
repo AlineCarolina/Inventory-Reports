@@ -1,5 +1,6 @@
 import csv
 import os
+import json
 from inventory_report.reports.complete_report import CompleteReport
 
 from inventory_report.reports.simple_report import SimpleReport
@@ -20,12 +21,20 @@ class Inventory:
     def get_file_type(cls, format_path):
         if format_path == '.csv':
             return Inventory.csv_reader
+        elif format_path == '.json':
+            return Inventory.json_reader
 
     @classmethod
     def csv_reader(cls, path):
         with open(path, 'r') as csv_file:
             reader = csv.DictReader(csv_file)
-            csvList = []
+            csv_list = []
             for file in reader:
-                csvList.append(file)
-            return csvList
+                csv_list.append(file)
+            return csv_list
+
+    @classmethod
+    def json_reader(cls, path):
+        with open(path, 'r') as json_file:
+            json_list = json.load(json_file)
+            return json_list
